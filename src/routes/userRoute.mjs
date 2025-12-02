@@ -15,10 +15,10 @@ router.get('/api/users',verifyUser,async (req,res)=>{
     const filter = req.query.filter;
     const search = req.query.search;
     var user = null;
-    const data = await UsersDB.find();
+    const data = await UsersDB.find({},{username : true,age : true,class : true, _id : false  });
     if(data.length != 0){
         const wrappedData = data.map((user) => userDTO(user));
-        return res.status(200).send(wrappedData);
+        return res.status(200).send(data);
     }
     
 });
