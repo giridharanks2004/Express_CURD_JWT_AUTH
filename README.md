@@ -28,14 +28,6 @@ Delete users by ID.
 | Others         | dotenv, cookie-parser                 |
 
 
-src/
-│
-├── routes/             # User API routes
-├── controllers/        # CRUD and auth logic
-├── middlewares/        # JWT auth verification
-├── utils/              # Validation and helpers
-├── .env                # Environment variables (JWT_SECRET)
-└── index.mjs          # Express app entry point
 
 
 | Method | Endpoint         | Description                         | Access    |
