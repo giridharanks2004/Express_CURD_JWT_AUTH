@@ -1,6 +1,7 @@
 import { users } from "./data.mjs";
 import userModel from "../models/userModel.mjs";
 import jwt from "jsonwebtoken";
+import { userDTO } from "../DTO/userDTO.mjs";
 export const getUserIndexById = (req,res,next) => {
     const userIndex = users.findIndex((user)=>{
         return user.id === parseInt(req.params.id);
@@ -45,7 +46,13 @@ export const pagination = (model) => {
 
             const users = await model.find({}).skip(start).limit(limit);
 
-            results.results = users;
+            results.results = users.map((user) => { return userDTO(user)});
+
+            results.totalDocs = await model.countDocuments();
+
+            results.page = page;
+
+            results.totalpages = Math.ceil(results.totalDocs/limit);
 
             req.pagination = results;
 

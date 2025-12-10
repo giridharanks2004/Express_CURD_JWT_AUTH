@@ -11,14 +11,10 @@ const router = Router();
 
 // getting all the users or list of users
 // http://localhost:3000/api/users?page=4&limit=3
-router.get('/api/users',pagination(UsersDB), async (req,res)=>{
+router.get('/api/users',verifyUser,pagination(UsersDB), async (req,res)=>{
     const filter = req.query.filter;
     const search = req.query.search;
-    if(req.pagination.length != 0){
-        const wrappedData = req.pagination.results.map((user) => userDTO(user));
-        return res.status(200).send(wrappedData);
-    }
-    
+    return res.status(200).send(req.pagination);
 });
 
 
