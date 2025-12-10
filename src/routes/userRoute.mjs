@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { users } from "../utils/data.mjs";
-import { getUserIndexById } from "../utils/middlewares.mjs";
+import { getUserIndexById, pagination } from "../utils/middlewares.mjs";
 import { verifyUser } from "../utils/middlewares.mjs";
 import { userValidationSchema } from "../utils/validation.mjs";
 import { checkSchema, validationResult , matchedData } from "express-validator";
@@ -11,14 +11,12 @@ const router = Router();
 
 // getting all the users or list of users
 //http://localhost:3000/api/users?filter=username&search=giri
-router.get('/api/users',verifyUser,async (req,res)=>{
+router.get('/api/users',pagination(UsersDB), async (req,res)=>{
     const filter = req.query.filter;
     const search = req.query.search;
-    var user = null;
-    const data = await UsersDB.find({},{username : true,age : true,class : true, _id : false  });
-    if(data.length != 0){
-        const wrappedData = data.map((user) => userDTO(user));
-        return res.status(200).send(data);
+    if(res.pagination.length != 0){
+        const wrappedData = res.pagination.results.map((user) => userDTO(user));
+        return res.status(200).send(wrappedData);
     }
     
 });

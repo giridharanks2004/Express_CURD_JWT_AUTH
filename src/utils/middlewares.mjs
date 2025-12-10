@@ -1,4 +1,5 @@
 import { users } from "./data.mjs";
+import userModel from "../models/userModel.mjs";
 import jwt from "jsonwebtoken";
 export const getUserIndexById = (req,res,next) => {
     const userIndex = users.findIndex((user)=>{
@@ -29,4 +30,30 @@ export const verifyUser = (req,res,next)=>{
         next();
     });
 
+}
+
+export const pagination = (model) => {
+    return async (req,res,next) => {
+        const page = parseInt(req.query.page);
+        const limit = parseInt(req.query.limit);
+
+        const start = (page - 1) * limit;
+
+        try {
+            
+            const results = {}
+
+            const users = await model.find({}).skip(start).limit(limit);
+
+            results.results = users;
+
+            res.pagination = results;
+
+            next();
+
+        } catch (err) {
+            res.status(400).send({msg : err.message});
+        }
+
+    }
 }
