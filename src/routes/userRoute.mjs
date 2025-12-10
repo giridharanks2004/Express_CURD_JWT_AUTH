@@ -36,7 +36,7 @@ router.post('/api/users',verifyUser,checkSchema(userValidationSchema),async (req
 });
 
 //getting a sepecific user by id
-router.get('/api/users/:id',verifyUser,(req,res)=>{
+router.get('/api/users/:id',(req,res)=>{
     const id = req.params.id
     if(!id){
         return res.status(400).send({

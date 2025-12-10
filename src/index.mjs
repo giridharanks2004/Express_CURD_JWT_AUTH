@@ -26,7 +26,7 @@ app.listen(PORT,()=>{
 });
 
 mongoose.connect(process.env.DB_URI)
-    .then(()=>console.log("DB connected"))
+    .then((con)=>console.log("DB connected at "+con.connection.host))
     .catch((err)=>console.log(err.message));
 
 
