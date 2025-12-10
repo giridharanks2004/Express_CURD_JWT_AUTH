@@ -10,7 +10,7 @@ import { userDTO } from "../DTO/userDTO.mjs";
 const router = Router();
 
 // getting all the users or list of users
-//http://localhost:3000/api/users?filter=username&search=giri
+// http://localhost:3000/api/users?page=4&limit=3
 router.get('/api/users',pagination(UsersDB), async (req,res)=>{
     const filter = req.query.filter;
     const search = req.query.search;
