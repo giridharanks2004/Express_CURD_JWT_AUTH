@@ -34,8 +34,8 @@ export const verifyUser = (req,res,next)=>{
 
 export const pagination = (model) => {
     return async (req,res,next) => {
-        const page = parseInt(req.query.page);
-        const limit = parseInt(req.query.limit);
+        const page = parseInt(req.query.page) || 1 ;
+        const limit = 3;
 
         const start = (page - 1) * limit;
 
@@ -47,7 +47,7 @@ export const pagination = (model) => {
 
             results.results = users;
 
-            res.pagination = results;
+            req.pagination = results;
 
             next();
 

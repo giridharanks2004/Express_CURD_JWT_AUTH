@@ -14,8 +14,9 @@ const router = Router();
 router.get('/api/users',pagination(UsersDB), async (req,res)=>{
     const filter = req.query.filter;
     const search = req.query.search;
-    if(res.pagination.length != 0){
-        const wrappedData = res.pagination.results.map((user) => userDTO(user));
+    console.log(req.pagination);
+    if(req.pagination.length != 0){
+        const wrappedData = req.pagination.results.map((user) => userDTO(user));
         return res.status(200).send(wrappedData);
     }
     
