@@ -19,7 +19,7 @@ router.get('/api/users',verifyUser,pagination(UsersDB), async (req,res)=>{
 
 
 // saving a new record in users
-router.post('/api/users',verifyUser,checkSchema(userValidationSchema),async (req,res)=>{
+router.post('/api/users',checkSchema(userValidationSchema),async (req,res)=>{
     const result = validationResult(req);
     if(!result.isEmpty()){
         return res.status(400).send({...result.array()});
@@ -36,7 +36,7 @@ router.post('/api/users',verifyUser,checkSchema(userValidationSchema),async (req
 });
 
 //getting a sepecific user by id
-router.get('/api/users/:id',(req,res)=>{
+router.get('/api/users/:id',verifyUser,(req,res)=>{
     const id = req.params.id
     if(!id){
         return res.status(400).send({
