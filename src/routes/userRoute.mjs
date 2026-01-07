@@ -7,6 +7,8 @@ import { checkSchema, validationResult , matchedData } from "express-validator";
 import UsersDB from "../models/userModel.mjs";
 import { userDTO } from "../DTO/userDTO.mjs";
 
+import redis from "../utils/redis.mjs"
+
 const router = Router();
 
 // getting all the users or list of users
@@ -19,7 +21,7 @@ router.get('/api/users',pagination(UsersDB), async (req,res)=>{
 
 
 // saving a new record in users
-router.post('/api/users',verifyUser,checkSchema(userValidationSchema),async (req,res)=>{
+router.post('/api/users',checkSchema(userValidationSchema),async (req,res)=>{
     const result = validationResult(req);
     if(!result.isEmpty()){
         return res.status(400).send({...result.array()});
@@ -36,21 +38,26 @@ router.post('/api/users',verifyUser,checkSchema(userValidationSchema),async (req
 });
 
 //getting a sepecific user by id
-router.get('/api/users/:id',verifyUser,(req,res)=>{
+router.get('/api/users/:id', async (req,res)=>{
     const id = req.params.id
     if(!id){
         return res.status(400).send({
             msg : "this is not a correct id passed please verify ur request"
         });
     }
-    
-    UsersDB.findById(id)
-                .then((data)=>{
-                    return res.status(200).send(userDTO(data));
-                })
-                .catch(()=>{
-                    return res.status(404).send({msg : "user not found "});
-                });
+
+    const cached = await redis.get(`user:${id}`)
+    if(cached !== null){
+        return res.status(200).send(JSON.parse(cached))
+    }
+    else{
+        const data = await UsersDB.findById(id)
+        if(data !== null){
+            redis.set(`user:${id}`,JSON.stringify(data))
+            return res.status(200).send(data)
+        }
+        return res.status(404).send({msg : "not found"})
+    }
 });
 
 // complete updation of record 
