@@ -53,7 +53,9 @@ router.get('/api/users/:id', async (req,res)=>{
     else{
         const data = await UsersDB.findById(id)
         if(data !== null){
-            redis.set(`user:${id}`,JSON.stringify(data))
+            redis.set(`user:${id}`,JSON.stringify(data),{
+                EX : 30
+            })
             return res.status(200).send(data)
         }
         return res.status(404).send({msg : "not found"})
